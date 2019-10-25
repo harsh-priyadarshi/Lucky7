@@ -1,5 +1,6 @@
 ﻿using Fordi.Common;
 using Fordi.Core;
+using Papae.UnitySDK.Managers;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
@@ -21,11 +22,18 @@ namespace Fordi.UI
         [SerializeField]
         protected IAppTheme m_appTheme;
 
+        private const string ClickClip = "button_click";
+
         private void Awake()
         {
             m_appTheme = IOC.Resolve<IAppTheme>();
             if (m_selectable == null)
                 m_selectable = GetComponent<Selectable>();
+            ((Button)m_selectable).onClick.AddListener(() =>
+            {
+                var clip = AudioManager.Instance.GetClipFromPlaylist(ClickClip);
+                AudioManager.Instance.PlayOneShot(clip);
+            });            
             AwakeOverride();
         }
 
