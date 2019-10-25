@@ -15,6 +15,7 @@ namespace Fordi.UI
         public Sprite Preview;
         public string Content;
         public bool Blocked;
+        public bool Persist;
     }
 
     public class Popup : MonoBehaviour, IScreen
@@ -27,6 +28,7 @@ namespace Fordi.UI
         private Button m_okButton, m_closeButton;
 
         public bool Blocked { get; private set; }
+        public bool Persist { get; private set; }
 
         private Action m_closed = null;
         private IGlobalUI m_globalUI;
@@ -36,12 +38,13 @@ namespace Fordi.UI
             m_globalUI = IOC.Resolve<IGlobalUI>();
         }
 
-        public void Show(PopupInfo popupInfo, bool blocked, Action closed  = null)
+        public void Show(PopupInfo popupInfo, Action closed  = null)
         {
             gameObject.SetActive(true);
             m_closed = closed;
 
-            Blocked = blocked;
+            Blocked = popupInfo.Blocked;
+            Persist = popupInfo.Persist;
 
             if (!string.IsNullOrEmpty(popupInfo.Title))
                 m_title.text = popupInfo.Title;

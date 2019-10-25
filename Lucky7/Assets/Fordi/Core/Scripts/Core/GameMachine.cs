@@ -24,6 +24,7 @@ namespace Fordi.Core
     public interface IGame
     {
         bool CanExecuteMenuCommand(string cmd);
+        void ExecuteButtonCommand(UserInputArgs cmd);
         void ExecuteMenuCommand(MenuClickArgs args);
         void Play();
         void Pause();
@@ -58,13 +59,14 @@ namespace Fordi.Core
         private IGame m_home, m_lucky7, m_currentGame;
         private IMenuSelection m_menuSelection;
         private IAudio m_audio;
-        
+        private IPlayer m_player;
 
         private void Awake()
         {
             m_home = GetComponentInChildren<Home>();
             m_lucky7 = GetComponentInChildren<Lucky7Engine.Lucky7>();
             m_menuSelection = IOC.Resolve<IMenuSelection>();
+            m_player = IOC.Resolve<IPlayer>();
             m_audio = IOC.Resolve<IAudio>();
             SetGame(GetGame(m_menuSelection.Playground));
             m_menuSelection.Playground = Playground.LUCKY7;

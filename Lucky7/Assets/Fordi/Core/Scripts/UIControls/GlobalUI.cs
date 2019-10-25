@@ -19,9 +19,9 @@ namespace Fordi.UI
     public interface IGlobalUI
     {
         bool IsOpen { get; }
-        void OpenMenu(MenuItemInfo[] menuItemInfos, bool block = true);
-        void OpenGridMenu(MenuItemInfo[] menuItemInfos, string title, bool block = false);
-        void Popup(PopupInfo popupInfo, bool block = false);
+        void OpenMenu(MenuItemInfo[] menuItemInfos, bool block = true, bool persist = true);
+        void OpenGridMenu(MenuItemInfo[] menuItemInfos, string title, bool block = false, bool persist = true);
+        void Popup(PopupInfo popupInfo);
         void CloseLastScreen();
         void LoadHeader();
     }
@@ -32,6 +32,7 @@ namespace Fordi.UI
         void Deactivate();
         void Close();
         bool Blocked { get; }
+        bool Persist { get; }
     }
 
     public class GlobalUI : MonoBehaviour, IGlobalUI
@@ -55,43 +56,54 @@ namespace Fordi.UI
 
         public bool IsOpen { get { return m_screenStack.Count != 0; } }
 
-        public void OpenMenu(MenuItemInfo[] items, bool block = true)
+        public void OpenMenu(MenuItemInfo[] items, bool block = true, bool persist = true)
         {
             if (m_screenStack.Count > 0)
             {
                 var screen = m_screenStack.Peek();
-                screen.Deactivate();
+                if (screen.Persist)
+                    screen.Deactivate();
+                else
+                    m_screenStack.Pop().Close();
             }
+
             m_uiBlocker.SetActive(block);
             var menu = Instantiate(m_mainMenuPrefab, m_screensRoot);
-            menu.OpenMenu(items, block);
+            menu.OpenMenu(items, block, persist);
             m_screenStack.Push(menu);
         }
 
-        public void OpenGridMenu(MenuItemInfo[] items, string title, bool block = false)
+        public void OpenGridMenu(MenuItemInfo[] items, string title, bool block = false, bool persist = true)
         {
             if (m_screenStack.Count > 0)
             {
                 var screen = m_screenStack.Peek();
-                screen.Deactivate();
+                if (screen.Persist)
+                    screen.Deactivate();
+                else
+                    m_screenStack.Pop().Close();
             }
+
             m_uiBlocker.SetActive(block);
             var menu = Instantiate(m_gridMenuPrefab, m_screensRoot);
-            menu.OpenGridMenu(items, title, block);
+            menu.OpenGridMenu(items, title, block, persist);
             m_screenStack.Push(menu);
         }
 
-        public void Popup(PopupInfo popupInfo, bool block = false)
+        public void Popup(PopupInfo popupInfo)
         {
             if (m_screenStack.Count > 0)
             {
                 var screen = m_screenStack.Peek();
-                screen.Deactivate();
+                if (screen.Persist)
+                    screen.Deactivate();
+                else
+                    m_screenStack.Pop().Close();
             }
 
             m_uiBlocker.SetActive(popupInfo.Blocked);
             var popup = Instantiate(m_popupPrefab, m_screensRoot);
-            popup.Show(popupInfo, block, null);
+            popup.Show(popupInfo, null);
             m_screenStack.Push(popup);
         }
 

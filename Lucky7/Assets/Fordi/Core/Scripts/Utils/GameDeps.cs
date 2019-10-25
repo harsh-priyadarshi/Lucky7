@@ -57,14 +57,14 @@ namespace Fordi.Core
             }
         }
 
-        private IGlobalUI m_vRMenu;
+        private IGlobalUI m_globalUI;
 
         protected virtual IGlobalUI UI
         {
             get
             {
-                GlobalUI vrMenu = FindObjectOfType<GlobalUI>();
-                return vrMenu;
+                GlobalUI globalUI = FindObjectOfType<GlobalUI>();
+                return globalUI;
             }
         }
 
@@ -84,7 +84,7 @@ namespace Fordi.Core
             m_gameMachine = GameMachine;
             m_appTheme = AppTheme;
             m_audio = Audio;
-            m_vRMenu = UI;
+            m_globalUI = UI;
         }
 
         private void OnDestroy()
@@ -144,10 +144,12 @@ namespace Fordi.Core
         {
             IOC.RegisterFallback(() => Instance.m_gameMachine);
             IOC.RegisterFallback(() => Instance.m_appTheme);
-            IOC.RegisterFallback(() => Instance.m_vRMenu);
+            IOC.RegisterFallback(() => Instance.m_globalUI);
             IOC.RegisterFallback(() => Instance.m_audio);
             if (IOC.Resolve<IMenuSelection>() == null)
                 IOC.Register<IMenuSelection>(new MenuSelection());
+            if (IOC.Resolve<IPlayer>() == null)
+                IOC.Register<IPlayer>(new Player());
         }
 
         private static void OnSceneUnloaded(Scene arg0)

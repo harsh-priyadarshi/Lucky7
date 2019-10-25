@@ -89,6 +89,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4436e9af9d230af4baa7a859087f0fd4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  m_music:
+  - {fileID: 8300000, guid: 3df9dd9a5f4741e4a835e4c51da66446, type: 3}
   m_gamePrefab: {fileID: 4726096627929998224, guid: b20f497b7ab1bf141bd0405dcf1737ea,
     type: 3}
   m_menu: {fileID: 1850842191822334504}
@@ -194,9 +196,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a3212230d8cd1e94dae8122d37709ce4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  m_music: []
   m_gamePrefab: {fileID: 5868436907069047135, guid: c5bb6a474f0af7c48adaac073c2ab853,
     type: 3}
   m_menu: {fileID: 3145580934234213076}
+  m_avatars:
+  - {fileID: 21300000, guid: d8926f71437745747b5fda2c19ca13bb, type: 3}
+  - {fileID: 21300000, guid: 7050ce867381e444a8e2ca3a1738b708, type: 3}
 --- !u!1 &3145580934873138095
 GameObject:
   m_ObjectHideFlags: 0

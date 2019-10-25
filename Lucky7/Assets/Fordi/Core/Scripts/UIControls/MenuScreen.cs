@@ -19,6 +19,9 @@ namespace Fordi.UI
 
         public bool Blocked { get; private set; }
 
+        public bool Persist { get; private set; }
+
+
         public void Deactivate()
         {
             gameObject.SetActive(false);
@@ -46,20 +49,21 @@ namespace Fordi.UI
             m_contentRoot.DetachChildren();
         }
 
-        public void OpenMenu(MenuItemInfo[] items, bool blocked)
+        public void OpenMenu(MenuItemInfo[] items, bool blocked, bool persist)
         {
             Clear();
             Blocked = blocked;
+            Persist = persist;
             gameObject.SetActive(true);
             foreach (var item in items)
                 SpawnMenuItem(item, m_menuItem, m_contentRoot);
         }
 
-        public void OpenGridMenu(MenuItemInfo[] items, string title, bool blocked)
+        public void OpenGridMenu(MenuItemInfo[] items, string title, bool blocked, bool persist)
         {
             if (m_title != null)
                 m_title.text = title;
-            OpenMenu(items, blocked);
+            OpenMenu(items, blocked, persist);
         }
 
         public void Close()

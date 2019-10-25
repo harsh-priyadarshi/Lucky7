@@ -10,12 +10,14 @@ namespace Fordi.Core
     {
         protected IGameMachine m_gameMachine;
         protected IGlobalUI m_globalUI;
+        protected IPlayer m_player;
 
         protected void Awake()
         {
             AwakeOverride();
             m_gameMachine = IOC.Resolve<IGameMachine>();
             m_globalUI = IOC.Resolve<IGlobalUI>();
+            m_player = IOC.Resolve<IPlayer>();
         }
 
         protected void OnDestroy()

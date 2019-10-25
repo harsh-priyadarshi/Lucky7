@@ -7,16 +7,9 @@ namespace Fordi.Lucky7Engine
 {
     public class Lucky7Input : InputBase
     {
-        // Start is called before the first frame update
-        void Start()
+        public void DisplayPlayer()
         {
-
-        }
-
-        // Update is called once per frame
-        void Update()
-        {
-
+            m_player.Display();
         }
     }
 }

@@ -5,6 +5,7 @@ using UnityEngine;
 using Fordi.Common;
 using Fordi.UI;
 using Fordi.UI.MenuControl;
+using Papae.UnitySDK.Managers;
 
 namespace Fordi.Core
 {
@@ -74,6 +75,8 @@ namespace Fordi.Core
             base.Load();
             if (m_experienceMachine == null)
                 m_experienceMachine = IOC.Resolve<IGameMachine>();
+            if (m_music.Length > 0)
+                AudioManager.Instance.PlayOneShot(m_music[0], Vector3.zero, .2f);
         }
     }
 }

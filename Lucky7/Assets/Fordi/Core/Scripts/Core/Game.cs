@@ -5,6 +5,7 @@ using UnityEngine;
 using Fordi.Common;
 using Fordi.UI;
 using Fordi.UI.MenuControl;
+using Papae.UnitySDK.Managers;
 
 namespace Fordi.Core
 {
@@ -43,8 +44,12 @@ namespace Fordi.Core
     {
         protected IGameMachine m_experienceMachine;
         protected IGlobalUI m_globalUI;
-        public IMenuSelection m_menuSelection;
-        public IAudio m_audio;
+        protected IMenuSelection m_menuSelection;
+        protected IAudio m_audio;
+        protected IPlayer m_player;
+
+        [SerializeField]
+        protected AudioClip[] m_music;
 
         [SerializeField]
         private GameObject m_gamePrefab;
@@ -61,6 +66,7 @@ namespace Fordi.Core
             m_globalUI = IOC.Resolve<IGlobalUI>();
             m_menuSelection = IOC.Resolve<IMenuSelection>();
             m_audio = IOC.Resolve<IAudio>();
+            m_player = IOC.Resolve<IPlayer>();
             AwakeOverride();
         }
 
@@ -170,5 +176,7 @@ namespace Fordi.Core
             if (m_gameInstance != null)
                 Destroy(m_gameInstance);
         }
+
+        public virtual void ExecuteButtonCommand(UserInputArgs args) { }
     }
 }

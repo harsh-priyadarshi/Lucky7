@@ -54,6 +54,12 @@ namespace Fordi.UI.MenuControl
         OTHER
     }
 
+    public class UserInputArgs
+    {
+        public string Command;
+        public object Data;
+    }
+
     [Serializable]
     public class MenuClickArgs
     {
