@@ -143,7 +143,7 @@ namespace Fordi.UI.MenuControl
 
         public void Close()
         {
-            m_globalUI.CloseMenu();
+            m_globalUI.CloseLastScreen();
         }
     }
 }

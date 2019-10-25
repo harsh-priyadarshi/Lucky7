@@ -45,7 +45,7 @@ namespace Fordi.Core
 
         public override void ToggleMenu()
         {
-            if (m_globalUI.IsMenuOpen)
+            if (m_globalUI.IsOpen)
                 m_menu.Close();
             else
                 m_menu.Open(m_insceneMenuItems);

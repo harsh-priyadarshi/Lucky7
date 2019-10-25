@@ -62,7 +62,7 @@ namespace Fordi.Core
                 m_globalUI = IOC.Resolve<IGlobalUI>();
             }
 
-            if (!m_globalUI.IsMenuOpen)
+            if (!m_globalUI.IsOpen)
             {
                 base.ToggleMenu();
                 m_sequenceIterator = 0;

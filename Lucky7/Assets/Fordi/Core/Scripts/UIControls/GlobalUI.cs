@@ -8,126 +8,114 @@ using UnityEngine.UI;
 
 namespace Fordi.UI
 {
-    public struct PopupInfo
+    public enum ScreenType
     {
-        public string Title;
-        public string Content;
-        public Sprite Preview;
+        MAIN_MENU,
+        GRID_MENU,
+        POPUP,
+        NOT_VALID
     }
 
     public interface IGlobalUI
     {
-        void Clear();
+        bool IsOpen { get; }
         void OpenMenu(MenuItemInfo[] menuItemInfos, bool block = true);
-        void CloseMenu();
         void OpenGridMenu(MenuItemInfo[] menuItemInfos, string title, bool block = false);
-        void LoadHeader();
-        bool IsMenuOpen { get; }
         void Popup(PopupInfo popupInfo, bool block = false);
+        void CloseLastScreen();
+        void LoadHeader();
+    }
+
+    public interface IScreen
+    {
+        void Reopen();
+        void Deactivate();
+        void Close();
+        bool Blocked { get; }
     }
 
     public class GlobalUI : MonoBehaviour, IGlobalUI
     {
-        [Header("Menu")]
+        #region INSPECTOR_REFERENCES
         [SerializeField]
-        private RectTransform m_menuContentRoot;
+        private MenuScreen m_mainMenuPrefab, m_gridMenuPrefab;
         [SerializeField]
-        private RectTransform m_gridContentRoot;
+        private Transform m_screensRoot;
         [SerializeField]
-        private GameObject m_menuItem;
-        [SerializeField]
-        private GameObject m_gridMenuItem;
-        [SerializeField]
-        private RectTransform m_mainMenuRoot, m_menuRoot;
-        [SerializeField]
-        private RectTransform m_menu, m_gridMenu;
-        [SerializeField]
-        private TextMeshProUGUI m_gridWindowTitle;
-
-        [Header("Others")]
-        [SerializeField]
-        private Popup m_popup;
+        private Popup m_popupPrefab;
         [SerializeField]
         private TextMeshProUGUI m_coinsDisplay;
         [SerializeField]
         private GameObject m_header;
         [SerializeField]
         private GameObject m_uiBlocker;
+        #endregion
 
-        private GameObject m_menuInstance;
+        private Stack<IScreen> m_screenStack = new Stack<IScreen>();
 
-        private bool m_isMenuOpen = false;
+        public bool IsOpen { get { return m_screenStack.Count != 0; } }
 
-        public bool IsMenuOpen { get { return m_isMenuOpen; } }
-
-        public void SpawnMenuItem(MenuItemInfo menuItemInfo, GameObject prefab, Transform parent)
+        public void OpenMenu(MenuItemInfo[] items, bool block = true)
         {
-            MenuItem menuItem = Instantiate(prefab, parent, false).GetComponentInChildren<MenuItem>();
-            menuItem.name = "MenuItem";
-            menuItem.Item = menuItemInfo;
-        }
-
-        public void Clear()
-        {
-            foreach (Transform child in m_menuContentRoot)
+            if (m_screenStack.Count > 0)
             {
-                Destroy(child.gameObject);
+                var screen = m_screenStack.Peek();
+                screen.Deactivate();
             }
-            m_menuContentRoot.DetachChildren();
+            m_uiBlocker.SetActive(block);
+            var menu = Instantiate(m_mainMenuPrefab, m_screensRoot);
+            menu.OpenMenu(items, block);
+            m_screenStack.Push(menu);
+        }
 
-            foreach (Transform child in m_gridContentRoot)
+        public void OpenGridMenu(MenuItemInfo[] items, string title, bool block = false)
+        {
+            if (m_screenStack.Count > 0)
             {
-                Destroy(child.gameObject);
+                var screen = m_screenStack.Peek();
+                screen.Deactivate();
             }
-            m_gridContentRoot.DetachChildren();
-        }
-
-        public void OpenMenu(MenuItemInfo[] menuItemInfos, bool block = true)
-        {
-            Clear();
             m_uiBlocker.SetActive(block);
-            m_mainMenuRoot.gameObject.SetActive(true);
-            m_menu.gameObject.SetActive(true);
-            m_gridMenu.gameObject.SetActive(false);
-            foreach (var item in menuItemInfos)
-                SpawnMenuItem(item, m_menuItem, m_menuContentRoot);
-            m_isMenuOpen = true;
+            var menu = Instantiate(m_gridMenuPrefab, m_screensRoot);
+            menu.OpenGridMenu(items, title, block);
+            m_screenStack.Push(menu);
         }
 
-        public void OpenGridMenu(MenuItemInfo[] menuItemInfos, string windowTitle, bool block = false)
+        public void Popup(PopupInfo popupInfo, bool block = false)
         {
-            Clear();
-            m_uiBlocker.SetActive(block);
-            m_mainMenuRoot.gameObject.SetActive(true);
-            m_menu.gameObject.SetActive(false);
-            m_gridMenu.gameObject.SetActive(true);
-            //m_gridWindowTitle.transform.parent.gameObject.SetActive(!string.IsNullOrEmpty(windowTitle));
-            m_gridWindowTitle.text = windowTitle;
-            foreach (var item in menuItemInfos)
-                SpawnMenuItem(item, m_gridMenuItem, m_gridContentRoot);
-            m_isMenuOpen = true;
+            if (m_screenStack.Count > 0)
+            {
+                var screen = m_screenStack.Peek();
+                screen.Deactivate();
+            }
+
+            m_uiBlocker.SetActive(popupInfo.Blocked);
+            var popup = Instantiate(m_popupPrefab, m_screensRoot);
+            popup.Show(popupInfo, block, null);
+            m_screenStack.Push(popup);
         }
 
-        public void CloseMenu()
+        public void CloseLastScreen()
         {
-            m_mainMenuRoot.gameObject.SetActive(false);
-            m_gridMenu.gameObject.SetActive(false);
-            m_menu.gameObject.SetActive(false);
-            m_isMenuOpen = false;
-            if (m_menuInstance != null)
-                Destroy(m_menuInstance);
             m_uiBlocker.SetActive(false);
+
+            if (m_screenStack.Count > 0)
+            {
+                var screen = m_screenStack.Pop();
+                screen.Close();
+            }
+
+            if (m_screenStack.Count > 0)
+            {
+                var screen = m_screenStack.Peek();
+                m_uiBlocker.SetActive(screen.Blocked);
+                screen.Reopen();
+            }
         }
 
         public void LoadHeader()
         {
             m_header.SetActive(true);
-        }
-
-        public void Popup(PopupInfo popupInfo, bool block = false)
-        {
-            m_uiBlocker.SetActive(block);
-            m_popup.Show(popupInfo, () => m_uiBlocker.SetActive(false));
         }
     }
 }

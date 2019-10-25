@@ -12,7 +12,7 @@ namespace Fordi.UI.MenuControl
 {
     public delegate void MenuItemEventHandler(MenuItem menuItem);
 
-    public class MenuItem : VRButtonInteraction
+    public class MenuItem : ButtonInteraction
     {
         [SerializeField]
         private Image m_icon = null;
@@ -73,11 +73,11 @@ namespace Fordi.UI.MenuControl
                 }
                 m_item.Action = new MenuItemEvent();
                 m_item.Action.AddListener(m_experienceMachine.ExecuteMenuCommand);
-                ((Button)selectable).onClick.AddListener(() => m_item.Action.Invoke(new MenuClickArgs(m_item.Path, m_item.Text, m_item.Command, m_item.CommandType, m_item.Data)));
+                ((Button)m_selectable).onClick.AddListener(() => m_item.Action.Invoke(new MenuClickArgs(m_item.Path, m_item.Text, m_item.Command, m_item.CommandType, m_item.Data)));
             }
 
             gameObject.SetActive(validationResult.IsVisible);
-            selectable.interactable = validationResult.IsValid;
+            m_selectable.interactable = validationResult.IsValid;
         }
 
         private MenuItemValidationArgs IsValid()

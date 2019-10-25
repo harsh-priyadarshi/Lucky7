@@ -98,6 +98,7 @@ namespace Fordi.Core
         public void ExecuteMenuCommand(MenuClickArgs args)
         {
             m_currentGame.ExecuteMenuCommand(args);
+            //Debug.LogError(args.Path + " " + args.Path);
         }
         
         public void Play()
@@ -155,7 +156,7 @@ namespace Fordi.Core
             //args.Done = () => SceneManager.LoadScene(m_menuSelection.Location);
             //m_audio.Pause(args);
             //m_currentGame.OnLoad
-            IOC.Resolve<IGlobalUI>().CloseMenu();
+            IOC.Resolve<IGlobalUI>().CloseLastScreen();
             m_currentGame.Unload();
             m_currentGame = GetGame(m_menuSelection.Playground);
             m_currentGame.Load();

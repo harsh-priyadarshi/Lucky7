@@ -124,7 +124,7 @@ namespace Fordi.Core
 
         public virtual void ToggleMenu()
         {
-            if (m_globalUI.IsMenuOpen)
+            if (m_globalUI.IsOpen)
                 m_menu.Close();
             else
                 m_menu.Open();
