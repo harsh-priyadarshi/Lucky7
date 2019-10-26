@@ -143,9 +143,16 @@ namespace Fordi.Core
             //m_currentGame.OnLoad
             
             IOC.Resolve<IGlobalUI>().CloseLastScreen();
-            m_currentGame.Unload();
-            m_currentGame = GetGame(m_menuSelection.Playground);
-            m_currentGame.Load();
+
+            AudioArgs args = new AudioArgs(null);
+            args.FadeTime = 2;
+            args.Done = () =>
+            {
+                m_currentGame.Unload();
+                m_currentGame = GetGame(m_menuSelection.Playground);
+                m_currentGame.Load();
+            };
+            m_audio.Stop(args);
         }
         #endregion
     }

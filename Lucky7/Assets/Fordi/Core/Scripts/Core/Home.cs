@@ -76,7 +76,14 @@ namespace Fordi.Core
             if (m_gameMachine == null)
                 m_gameMachine = IOC.Resolve<IGameMachine>();
             if (m_music.Length > 0)
-                AudioManager.Instance.PlayOneShot(m_music[0], Vector3.zero, .2f);
+            {
+                AudioArgs args = new AudioArgs(m_music[0]);
+                args.Fade = true;
+                args.FadeTime = 2.0f;
+                args.Volume = .2f;
+                IOC.Resolve<IAudio>().Play(args);
+                //AudioManager.Instance.PlayOneShot(m_music[0], Vector3.zero, .2f);
+            }
         }
     }
 }

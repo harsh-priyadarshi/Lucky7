@@ -13,6 +13,7 @@ namespace Fordi.Core
         public bool Fade;
         public float FadeTime = 0;
         public Action Done;
+        public float Volume = 1;
 
         public AudioArgs(AudioClip clip)
         {
@@ -60,9 +61,9 @@ namespace Fordi.Core
             m_audioSource.volume = 0.0f;
             m_audioSource.Play();
             if (args.FadeTime == 0)
-                m_audioSource.volume = 1;
+                m_audioSource.volume = args.Volume;
             else
-                StartCoroutine(CoAudioVolume(1, args.FadeTime, args.Done));
+                StartCoroutine(CoAudioVolume(args.Volume, args.FadeTime, args.Done));
         }
 
         public void Resume(AudioArgs args)
@@ -76,13 +77,11 @@ namespace Fordi.Core
             if (args.FadeTime == 0)
                 m_audioSource.volume = 1;
             else
-                StartCoroutine(CoAudioVolume(1, args.FadeTime, null));
+                StartCoroutine(CoAudioVolume(args.Volume, args.FadeTime, null));
         }
 
         public void Stop(AudioArgs args)
         {
-            if (args.Clip == null)
-                return;
             StartCoroutine(CoAudioVolume(0, args.FadeTime, () =>
             {
                 m_audioSource.Stop();
