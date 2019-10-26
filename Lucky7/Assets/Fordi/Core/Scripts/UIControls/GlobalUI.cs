@@ -1,4 +1,5 @@
-﻿using Fordi.UI.MenuControl;
+﻿using Fordi.Core;
+using Fordi.UI.MenuControl;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -24,6 +25,8 @@ namespace Fordi.UI
         void Popup(PopupInfo popupInfo);
         void CloseLastScreen();
         void LoadHeader();
+        Sprite GetRandomAvatar();
+        void AddPlayer(Player player);
     }
 
     public interface IScreen
@@ -50,6 +53,12 @@ namespace Fordi.UI
         private GameObject m_header;
         [SerializeField]
         private GameObject m_uiBlocker;
+        [SerializeField]
+        private Sprite[] m_avatars;
+        [SerializeField]
+        private Transform[] m_playerAnchors;
+        [SerializeField]
+        private PlayerView m_playerViewPrefab;
         #endregion
 
         private Stack<IScreen> m_screenStack = new Stack<IScreen>();
@@ -128,6 +137,30 @@ namespace Fordi.UI
         public void LoadHeader()
         {
             m_header.SetActive(true);
+        }
+
+        public Sprite GetRandomAvatar()
+        {
+            if (m_avatars.Length > 0)
+            {
+                var index =  UnityEngine.Random.Range(0, m_avatars.Length);
+                return m_avatars[index];
+            }
+            return null;
+        }
+
+        public void AddPlayer(Player player)
+        {
+            foreach (var item in m_playerAnchors)
+            {
+                if (item.childCount > 0)
+                    continue;
+                else
+                {
+                    Instantiate(m_playerViewPrefab, item).DataBind(player);
+                    return;
+                }
+            }
         }
     }
 }

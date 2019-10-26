@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace Fordi.Core
 {
-    public class HomeInput : InputBase
+    public class HomeInterface : UIComponent
     {
         public void PlayClick()
         {

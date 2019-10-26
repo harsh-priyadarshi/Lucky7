@@ -37,12 +37,23 @@ namespace Fordi.Core
 
         private string[] m_playerNames = { "rajesh", "dhananjay", "pradeep", "sachin", "vidya", "parul" };
 
-        private IGlobalUI m_globalUI;
+        private static IGlobalUI m_globalUI;
 
         public Player()
         {
             int index = Random.Range(0, m_playerNames.Length - 1);
             Name = m_playerNames[index] + Random.Range(0, 9) + Random.Range(0, 9);
+        }
+
+        public static Player CreateRandomPlayer()
+        {
+            if (m_globalUI == null)
+                m_globalUI = IOC.Resolve<IGlobalUI>();
+
+            var player = new Player();
+            var totalRounds = Random.Range(0, 40);
+            player.Init(Random.Range(0, 40000), m_globalUI.GetRandomAvatar(), totalRounds, Random.Range(0, totalRounds + 1));
+            return player;
         }
 
         public void Init(int money, Sprite avatar, int roundsPlayed, int roundsWon)

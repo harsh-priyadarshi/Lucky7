@@ -9,6 +9,14 @@ using Papae.UnitySDK.Managers;
 
 namespace Fordi.Core
 {
+    public enum GameState
+    {
+        IDLE,
+        ROUND_BEGAN,
+        WAITING_FOR_RESULT,
+        POST_RESULT
+    }
+
     public enum ResourceType
     {
         MUSIC,
@@ -39,14 +47,46 @@ namespace Fordi.Core
         public GameObject Mandala;
     }
 
+    public interface IObservable
+    {
+        void AddObserver(IObserver observer);
+        void RemoveObserver(IObserver observer);
+        void Notify();
+    }
+
+    public interface IGame : IObservable
+    {
+        GameObject Gameobject { get; }
+        bool CanExecuteMenuCommand(string cmd);
+        void ExecuteButtonCommand(UserInputArgs cmd);
+        void ExecuteMenuCommand(MenuClickArgs args);
+        void Play();
+        void Pause();
+        void Resume();
+        void Stop();
+        void ToggleMenu();
+        void GoBack();
+        void OpenMenu();
+        void OpenGridMenu(MenuCommandType commandType);
+        void UpdateResourceSelection(MenuClickArgs args);
+        void Load();
+        void Unload();
+    }
+
+    public interface IObserver
+    {
+        void GameUpdate();
+    }
+
     [RequireComponent(typeof(Menu))]
     public abstract class Game : MonoBehaviour, IGame
     {
-        protected IGameMachine m_experienceMachine;
+        protected IGameMachine m_gameMachine;
         protected IGlobalUI m_globalUI;
         protected IMenuSelection m_menuSelection;
         protected IAudio m_audio;
         protected IPlayer m_player;
+        protected GameState m_state;
 
         [SerializeField]
         protected AudioClip[] m_music;
@@ -59,9 +99,13 @@ namespace Fordi.Core
 
         private GameObject m_gameInstance;
 
+        private List<IObserver> m_observers = new List<IObserver>();
+
+        public GameObject Gameobject { get { return gameObject; } }
+
         protected void Awake()
         {
-            m_experienceMachine = IOC.Resolve<IGameMachine>();
+            m_gameMachine = IOC.Resolve<IGameMachine>();
             m_menu = GetComponent<Menu>();
             m_globalUI = IOC.Resolve<IGlobalUI>();
             m_menuSelection = IOC.Resolve<IMenuSelection>();
@@ -178,5 +222,27 @@ namespace Fordi.Core
         }
 
         public virtual void ExecuteButtonCommand(UserInputArgs args) { }
+
+        public void AddObserver(IObserver observer)
+        {
+            if (!m_observers.Contains(observer))
+                m_observers.Add(observer);
+            else
+                Debug.LogError("Observer already registered with: " + this.name);
+        }
+
+        public void RemoveObserver(IObserver observer)
+        {
+            if (m_observers.Contains(observer))
+                m_observers.Remove(observer);
+            else
+                Debug.LogError("Can't remove observer. Observer not registered");
+        }
+
+        public virtual void Notify()
+        {
+            foreach (var item in m_observers)
+                item.GameUpdate();
+        }
     }
 }

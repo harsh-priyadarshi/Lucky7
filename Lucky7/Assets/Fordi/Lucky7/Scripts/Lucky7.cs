@@ -14,19 +14,49 @@ namespace Fordi.Lucky7Engine
                  "Rule 2: For Slot 1 to 6 and 8 to 12, bid amount doubles on win.\n\n" +
                  "Rule 3: For slot 7, bid amount tripples on win.";
 
-        [SerializeField]
-        private Sprite[] m_avatars;
+        private List<PlayerView> m_players;
 
+        private Lucky7Interface m_interface;
+
+        public int Time { get; private set; }
+
+        private IEnumerator m_round;
+
+
+        private void StartSimulation()
+        {
+            m_state = GameState.ROUND_BEGAN;
+
+            if (m_round != null)
+                StopCoroutine(m_round);
+
+            Time = Random.Range(5, 10);
+
+            m_round = CoRound();
+            StartCoroutine(m_round);
+        }
+
+        private IEnumerator CoRound()
+        {
+            while (Time > 0)
+            {
+                yield return new WaitForSeconds(1);
+
+                if (Random.Range(0, 10) < 7)
+                    m_globalUI.AddPlayer(Player.CreateRandomPlayer());
+                if (Random.Range(0, 10) < 5)
+                    m_globalUI.AddPlayer(Player.CreateRandomPlayer());
+                if (Random.Range(0, 10) < 2)
+                    m_globalUI.AddPlayer(Player.CreateRandomPlayer());
+            }
+        }
 
         public override void Load()
         {
             base.Load();
             m_globalUI.LoadHeader();
-
-            Sprite avatar = null;
-            if (m_avatars.Length > 0)
-                avatar = m_avatars[Random.Range(0, m_avatars.Length - 1)];
-            m_player.Init(2500, avatar, 0, 0);
+            
+            m_player.Init(2500, m_globalUI.GetRandomAvatar(), 0, 0);
 
             m_globalUI.Popup(new PopupInfo
             {
@@ -35,6 +65,10 @@ namespace Fordi.Lucky7Engine
                 Preview = null,
                 Blocked = false
             });
+
+            m_interface = FindObjectOfType<Lucky7Interface>();
+
+            StartSimulation();
         }
 
         public override void ExecuteMenuCommand(MenuClickArgs args)

@@ -5,6 +5,7 @@ using UnityEngine.SceneManagement;
 using Fordi.Common;
 using Fordi.UI.MenuControl;
 using Fordi.UI;
+using Papae.UnitySDK.Managers;
 
 namespace Fordi.Core
 {
@@ -19,24 +20,6 @@ namespace Fordi.Core
         NONE,
         PAUSED,
         RUNNING,
-    }
-
-    public interface IGame
-    {
-        bool CanExecuteMenuCommand(string cmd);
-        void ExecuteButtonCommand(UserInputArgs cmd);
-        void ExecuteMenuCommand(MenuClickArgs args);
-        void Play();
-        void Pause();
-        void Resume();
-        void Stop();
-        void ToggleMenu();
-        void GoBack();
-        void OpenMenu();
-        void OpenGridMenu(MenuCommandType commandType);
-        void UpdateResourceSelection(MenuClickArgs args);
-        void Load();
-        void Unload();
     }
 
     public interface IGameMachine
@@ -158,6 +141,7 @@ namespace Fordi.Core
             //args.Done = () => SceneManager.LoadScene(m_menuSelection.Location);
             //m_audio.Pause(args);
             //m_currentGame.OnLoad
+            
             IOC.Resolve<IGlobalUI>().CloseLastScreen();
             m_currentGame.Unload();
             m_currentGame = GetGame(m_menuSelection.Playground);

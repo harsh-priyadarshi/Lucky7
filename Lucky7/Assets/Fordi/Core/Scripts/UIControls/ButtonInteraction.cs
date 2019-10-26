@@ -32,7 +32,7 @@ namespace Fordi.UI
             ((Button)m_selectable).onClick.AddListener(() =>
             {
                 var clip = AudioManager.Instance.GetClipFromPlaylist(ClickClip);
-                AudioManager.Instance.PlayOneShot(clip);
+                AudioManager.Instance.PlayOneShot(clip, Vector3.zero, .2f);
             });            
             AwakeOverride();
         }

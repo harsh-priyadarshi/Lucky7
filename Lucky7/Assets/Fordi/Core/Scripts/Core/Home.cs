@@ -73,8 +73,8 @@ namespace Fordi.Core
         public override void Load()
         {
             base.Load();
-            if (m_experienceMachine == null)
-                m_experienceMachine = IOC.Resolve<IGameMachine>();
+            if (m_gameMachine == null)
+                m_gameMachine = IOC.Resolve<IGameMachine>();
             if (m_music.Length > 0)
                 AudioManager.Instance.PlayOneShot(m_music[0], Vector3.zero, .2f);
         }
