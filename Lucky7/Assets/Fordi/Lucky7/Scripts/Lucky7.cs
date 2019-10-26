@@ -18,11 +18,11 @@ namespace Fordi.Lucky7Engine
 
         private Lucky7Interface m_interface;
 
-        public int Time { get; private set; }
-
         private IEnumerator m_round;
 
         private int m_maximumBid = 0;
+
+        public int Time { get; protected set; }
 
         private void StartSimulation()
         {
@@ -35,6 +35,8 @@ namespace Fordi.Lucky7Engine
 
             m_round = CoRound();
             StartCoroutine(m_round);
+
+            Notify();
         }
 
         private IEnumerator CoRound()

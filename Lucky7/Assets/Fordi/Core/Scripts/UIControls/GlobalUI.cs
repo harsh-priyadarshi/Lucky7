@@ -167,22 +167,16 @@ namespace Fordi.UI
                 return;
             }
 
-            int leastBidAmount = m_tablePlayers[0].Player.LastBid;
             PlayerView leastTableBidder = m_tablePlayers[0];
 
             foreach (var item in m_tablePlayers)
-            {
-                if(item.Player.LastBid < leastBidAmount)
-                {
-                    leastBidAmount = item.Player.LastBid;
+                if(item.Player.LastBid < leastTableBidder.Player.LastBid)
                     leastTableBidder = item;
-                }
-            }
 
-            if (player.LastBid > leastBidAmount)
+            if (player.LastBid > leastTableBidder.Player.LastBid)
             {
-                leastTableBidder.Tween.Kill();
-                Debug.LogError(leastTableBidder.Player.LastBid);
+                if (leastTableBidder.Tween != null)
+                    leastTableBidder.Tween.Kill();
                 m_tablePlayers.Remove(leastTableBidder);
                 leastTableBidder.transform.SetParent(leastTableBidder.transform.parent.parent);
                 leastTableBidder.transform.DOMove(m_playerOrigin.position, 1f).OnComplete(() => Destroy(leastTableBidder.gameObject));
