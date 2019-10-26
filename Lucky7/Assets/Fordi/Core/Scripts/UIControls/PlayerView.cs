@@ -1,4 +1,5 @@
-﻿using Fordi.Core;
+﻿using DG.Tweening;
+using Fordi.Core;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -10,6 +11,10 @@ namespace Fordi.UI
     {
         private Player m_player;
 
+        public Player Player { get { return m_player; } }
+
+        public Tween Tween { get; set; } = null;
+
         [SerializeField]
         private Image m_preview;
 
@@ -17,7 +22,7 @@ namespace Fordi.UI
         {
             m_player = player;
             m_preview.sprite = player.Avatar;
-            m_text.text = "Rs. " + Random.Range(100, player.Money);
+            m_text.text = "Rs. " + player.LastBid;
         }
 
         public void DisplayPlayer()

@@ -14,7 +14,7 @@ namespace Fordi.Lucky7Engine
                  "Rule 2: For Slot 1 to 6 and 8 to 12, bid amount doubles on win.\n\n" +
                  "Rule 3: For slot 7, bid amount tripples on win.";
 
-        private List<PlayerView> m_players;
+        private List<Player> m_players = new List<Player>();
 
         private Lucky7Interface m_interface;
 
@@ -22,6 +22,7 @@ namespace Fordi.Lucky7Engine
 
         private IEnumerator m_round;
 
+        private int m_maximumBid = 0;
 
         private void StartSimulation()
         {
@@ -41,14 +42,21 @@ namespace Fordi.Lucky7Engine
             while (Time > 0)
             {
                 yield return new WaitForSeconds(1);
-
                 if (Random.Range(0, 10) < 7)
-                    m_globalUI.AddPlayer(Player.CreateRandomPlayer());
-                if (Random.Range(0, 10) < 5)
-                    m_globalUI.AddPlayer(Player.CreateRandomPlayer());
-                if (Random.Range(0, 10) < 2)
-                    m_globalUI.AddPlayer(Player.CreateRandomPlayer());
+                    CreateNewPlayer();
+                if (Random.Range(0, 10) < 4)
+                    CreateNewPlayer();
+                if (Random.Range(0, 10) == 0)
+                    CreateNewPlayer();
             }
+        }
+
+        void CreateNewPlayer()
+        {
+            var player = Player.CreateRandomPlayer();
+            //Debug.LogError(player.LastBid);
+            m_globalUI.SwapPlayer(player);
+            m_players.Add(player);
         }
 
         public override void Load()
@@ -56,7 +64,7 @@ namespace Fordi.Lucky7Engine
             base.Load();
             m_globalUI.LoadHeader();
             
-            m_player.Init(2500, m_globalUI.GetRandomAvatar(), 0, 0);
+            m_player.Init(2500, m_globalUI.GetRandomAvatar(), 0, 0, 0);
 
             m_globalUI.Popup(new PopupInfo
             {

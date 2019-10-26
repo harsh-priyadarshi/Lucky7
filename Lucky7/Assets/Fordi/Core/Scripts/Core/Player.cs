@@ -20,7 +20,7 @@ namespace Fordi.Core
 
         void Display();
 
-        void Init(int money, Sprite avatar, int roundsPlayed, int roundsWon);
+        void Init(int money, Sprite avatar, int roundsPlayed, int roundsWon, int lastBid);
     }
 
     public class Player : IPlayer
@@ -34,6 +34,8 @@ namespace Fordi.Core
         public int RoundsPlayed { get; set; }
 
         public int RoundsWon { get; set; }
+
+        public int LastBid { get; set; }
 
         private string[] m_playerNames = { "rajesh", "dhananjay", "pradeep", "sachin", "vidya", "parul" };
 
@@ -52,16 +54,19 @@ namespace Fordi.Core
 
             var player = new Player();
             var totalRounds = Random.Range(0, 40);
-            player.Init(Random.Range(0, 40000), m_globalUI.GetRandomAvatar(), totalRounds, Random.Range(0, totalRounds + 1));
+            var money = Random.Range(100, 40000);
+            var bidAmount = Random.Range(100, money);
+            player.Init(Random.Range(0, 40000), m_globalUI.GetRandomAvatar(), totalRounds, Random.Range(0, totalRounds/2), bidAmount);
             return player;
         }
 
-        public void Init(int money, Sprite avatar, int roundsPlayed, int roundsWon)
+        public void Init(int money, Sprite avatar, int roundsPlayed, int roundsWon, int lastBid)
         {
             Money = money;
             Avatar = avatar;
             RoundsPlayed = roundsPlayed;
             RoundsWon = roundsWon;
+            LastBid = lastBid;
         }
 
         public void Display()

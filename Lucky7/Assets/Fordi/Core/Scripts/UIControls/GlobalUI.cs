@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+using DG.Tweening;
 
 namespace Fordi.UI
 {
@@ -26,7 +27,7 @@ namespace Fordi.UI
         void CloseLastScreen();
         void LoadHeader();
         Sprite GetRandomAvatar();
-        void AddPlayer(Player player);
+        void SwapPlayer(Player player);
     }
 
     public interface IScreen
@@ -59,7 +60,11 @@ namespace Fordi.UI
         private Transform[] m_playerAnchors;
         [SerializeField]
         private PlayerView m_playerViewPrefab;
+        [SerializeField]
+        private Transform m_playerOrigin;
         #endregion
+
+        private List<PlayerView> m_tablePlayers = new List<PlayerView>();
 
         private Stack<IScreen> m_screenStack = new Stack<IScreen>();
 
@@ -149,16 +154,60 @@ namespace Fordi.UI
             return null;
         }
 
-        public void AddPlayer(Player player)
+        public void ClearPlayers()
+        {
+
+        }
+
+        public void SwapPlayer(Player player)
+        {
+            if (m_tablePlayers.Count < 5)
+            {
+                AddPlayer(player);
+                return;
+            }
+
+            int leastBidAmount = m_tablePlayers[0].Player.LastBid;
+            PlayerView leastTableBidder = m_tablePlayers[0];
+
+            foreach (var item in m_tablePlayers)
+            {
+                if(item.Player.LastBid < leastBidAmount)
+                {
+                    leastBidAmount = item.Player.LastBid;
+                    leastTableBidder = item;
+                }
+            }
+
+            if (player.LastBid > leastBidAmount)
+            {
+                leastTableBidder.Tween.Kill();
+                Debug.LogError(leastTableBidder.Player.LastBid);
+                m_tablePlayers.Remove(leastTableBidder);
+                leastTableBidder.transform.SetParent(leastTableBidder.transform.parent.parent);
+                leastTableBidder.transform.DOMove(m_playerOrigin.position, 1f).OnComplete(() => Destroy(leastTableBidder.gameObject));
+
+                AddPlayer(player);
+            }
+        }
+
+        void AddPlayer(Player player)
         {
             foreach (var item in m_playerAnchors)
             {
+                PlayerView playerView = null;
                 if (item.childCount > 0)
                     continue;
                 else
                 {
-                    Instantiate(m_playerViewPrefab, item).DataBind(player);
+                    playerView = Instantiate(m_playerViewPrefab, item);
+                    Vector3 position = playerView.transform.position;
+                    playerView.transform.position = m_playerOrigin.transform.position;
+                    playerView.DataBind(player);
+                    playerView.Tween = playerView.transform.DOMove(position, 1f);
+                    m_tablePlayers.Add(playerView);
                     return;
+                    //playerView.transform.DOMove(position, 1.0f).OnComplete(() => playerView.transform.DOMove(m_playerOrigin.position, 1.0f));
                 }
             }
         }
