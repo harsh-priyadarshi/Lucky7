@@ -14,7 +14,9 @@ namespace Fordi.Lucky7Engine
                  "Rule 2: For Slot 1 to 6 and 8 to 12, bid amount doubles on win.\n\n" +
                  "Rule 3: For slot 7, bid amount tripples on win.";
 
-        private List<Player> m_players = new List<Player>();
+        private List<Player> m_bidders = new List<Player>();
+
+        public List<Player> Bidders { get { return m_bidders; } }
 
         private Lucky7Interface m_interface;
 
@@ -58,7 +60,8 @@ namespace Fordi.Lucky7Engine
             var player = Player.CreateRandomPlayer();
             //Debug.LogError(player.LastBid);
             m_globalUI.SwapPlayer(player);
-            m_players.Add(player);
+            m_bidders.Add(player);
+            m_bidders.Sort();
         }
 
         public override void Load()

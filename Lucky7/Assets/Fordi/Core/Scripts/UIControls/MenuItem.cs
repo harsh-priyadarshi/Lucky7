@@ -17,7 +17,7 @@ namespace Fordi.UI.MenuControl
         [SerializeField]
         private Image m_icon = null;
 
-        private IGameMachine m_experienceMachine;
+        private IGameMachine m_gameMachine;
 
         private MenuItemInfo m_item;
         public MenuItemInfo Item
@@ -52,12 +52,12 @@ namespace Fordi.UI.MenuControl
 
             m_item.Validate = new MenuItemValidationEvent();
 
-            if (m_experienceMachine == null)
-                m_experienceMachine = IOC.Resolve<IGameMachine>();
+            if (m_gameMachine == null)
+                m_gameMachine = IOC.Resolve<IGameMachine>();
             if (m_appTheme == null)
                 m_appTheme = IOC.Resolve<IAppTheme>();
 
-            m_item.Validate.AddListener(m_experienceMachine.CanExecuteMenuCommand);
+            m_item.Validate.AddListener(m_gameMachine.CanExecuteMenuCommand);
             m_item.Validate.AddListener((args) => args.IsValid = m_item.IsValid);
 
             var validationResult = IsValid();
@@ -71,8 +71,13 @@ namespace Fordi.UI.MenuControl
                 {
                     m_text.color = m_appTheme.SelectedTheme.buttonDisabledTextColor;
                 }
-                m_item.Action = new MenuItemEvent();
-                m_item.Action.AddListener(m_experienceMachine.ExecuteMenuCommand);
+
+                if (m_item.Action == null)
+                    m_item.Action = new MenuItemEvent();
+                
+                else
+                    m_item.Action.AddListener(m_gameMachine.ExecuteMenuCommand);
+
                 ((Button)m_selectable).onClick.AddListener(() => m_item.Action.Invoke(new MenuClickArgs(m_item.Path, m_item.Text, m_item.Command, m_item.CommandType, m_item.Data)));
             }
 

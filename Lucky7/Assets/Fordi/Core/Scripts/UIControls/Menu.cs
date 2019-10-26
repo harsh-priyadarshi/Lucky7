@@ -100,7 +100,7 @@ namespace Fordi.UI.MenuControl
 
         public string Command;
         public MenuCommandType CommandType;
-        public MenuItemEvent Action;
+        public MenuItemEvent Action = null;
         public bool IsValid { get; set; } = true;
         public MenuItemValidationEvent Validate;
     }

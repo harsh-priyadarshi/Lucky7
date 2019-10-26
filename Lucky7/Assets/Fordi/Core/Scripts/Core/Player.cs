@@ -1,8 +1,10 @@
 ﻿using Fordi.Common;
 using Fordi.UI;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityRandom = UnityEngine.Random;
 
 namespace Fordi.Core
 {
@@ -23,7 +25,7 @@ namespace Fordi.Core
         void Init(int money, Sprite avatar, int roundsPlayed, int roundsWon, int lastBid);
     }
 
-    public class Player : IPlayer
+    public class Player : IPlayer, IComparable<Player>
     {
         public string Name { get; set; }
 
@@ -43,8 +45,8 @@ namespace Fordi.Core
 
         public Player()
         {
-            int index = Random.Range(0, m_playerNames.Length - 1);
-            Name = m_playerNames[index] + Random.Range(0, 9) + Random.Range(0, 9);
+            int index = UnityRandom.Range(0, m_playerNames.Length - 1);
+            Name = m_playerNames[index] + UnityRandom.Range(0, 9) + UnityRandom.Range(0, 9);
         }
 
         public static Player CreateRandomPlayer()
@@ -53,10 +55,10 @@ namespace Fordi.Core
                 m_globalUI = IOC.Resolve<IGlobalUI>();
 
             var player = new Player();
-            var totalRounds = Random.Range(0, 40);
-            var money = Random.Range(100, 40000);
-            var bidAmount = Random.Range(100, money);
-            player.Init(Random.Range(0, 40000), m_globalUI.GetRandomAvatar(), totalRounds, Random.Range(0, totalRounds/2), bidAmount);
+            var totalRounds = UnityRandom.Range(0, 40);
+            var money = UnityRandom.Range(100, 40000);
+            var bidAmount = UnityRandom.Range(100, money);
+            player.Init(UnityRandom.Range(0, 40000), m_globalUI.GetRandomAvatar(), totalRounds, UnityRandom.Range(0, totalRounds/2), bidAmount);
             return player;
         }
 
@@ -81,6 +83,14 @@ namespace Fordi.Core
                 Preview = Avatar,
                 Blocked = false
             });
+        }
+
+        public int CompareTo(Player other)
+        {
+            if (other == null)
+               return LastBid;
+
+            return LastBid - other.LastBid;
         }
     }
 }

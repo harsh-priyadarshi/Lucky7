@@ -1,8 +1,10 @@
-﻿using Fordi.UI.MenuControl;
+﻿using Fordi.Common;
+using Fordi.UI.MenuControl;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace Fordi.UI
 {
@@ -17,9 +19,19 @@ namespace Fordi.UI
         [SerializeField]
         private TextMeshProUGUI m_title;
 
+        [SerializeField]
+        private Button m_closeButton, m_okButton;
+
+        private IGlobalUI m_globalUI;
+
         public bool Blocked { get; private set; }
 
         public bool Persist { get; private set; }
+
+        void Awake()
+        {
+            m_globalUI = IOC.Resolve<IGlobalUI>();
+        }
 
 
         public void Deactivate()
@@ -57,6 +69,14 @@ namespace Fordi.UI
             gameObject.SetActive(true);
             foreach (var item in items)
                 SpawnMenuItem(item, m_menuItem, m_contentRoot);
+
+            if (m_globalUI == null)
+                m_globalUI = IOC.Resolve<IGlobalUI>();
+
+            if (m_okButton != null)
+                m_okButton.onClick.AddListener(() => m_globalUI.CloseLastScreen());
+            if (m_closeButton != null)
+                m_closeButton.onClick.AddListener(() => m_globalUI.CloseLastScreen());
         }
 
         public void OpenGridMenu(MenuItemInfo[] items, string title, bool blocked, bool persist)

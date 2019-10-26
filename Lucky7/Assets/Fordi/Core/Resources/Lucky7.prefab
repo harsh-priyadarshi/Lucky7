@@ -610,7 +610,18 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 5868436905996239313}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 8870969444005165922}
+        m_MethodName: DisplayBidders
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
     m_TypeName: UnityEngine.UI.Button+ButtonClickedEvent, UnityEngine.UI, Version=1.0.0.0,
       Culture=neutral, PublicKeyToken=null
 --- !u!114 &2232759714369802965
@@ -1296,7 +1307,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_timer: {fileID: 8267102541402138602}
-  m_lucky7: {fileID: 0}
 --- !u!1 &5868436907183337565
 GameObject:
   m_ObjectHideFlags: 0

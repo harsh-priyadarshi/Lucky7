@@ -995,16 +995,16 @@ RectTransform:
   m_GameObject: {fileID: 6694629749710105738}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1.054503, y: 1.054503, z: 1.054503}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 8597164396664401723}
   m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0.5}
-  m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 833.1, y: -417.18304}
+  m_AnchorMin: {x: 1, y: 0}
+  m_AnchorMax: {x: 1, y: 0}
+  m_AnchoredPosition: {x: 579, y: -341}
   m_SizeDelta: {x: 200, y: 200}
-  m_Pivot: {x: 0.5, y: 0.5}
+  m_Pivot: {x: 1, y: 0}
 --- !u!1 &6694629750601154351
 GameObject:
   m_ObjectHideFlags: 0
@@ -1228,7 +1228,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_mainMenuPrefab: {fileID: 403782842539042353, guid: 4ffcabc4943b8f34db854c57bc19133b,
     type: 3}
-  m_gridMenuPrefab: {fileID: 179772480793479083, guid: e36a3385b40173f4884342b87b0b886e,
+  m_gridMenuPrefab: {fileID: 8660708190242299870, guid: e36a3385b40173f4884342b87b0b886e,
     type: 3}
   m_screensRoot: {fileID: 6694629749530923107}
   m_popupPrefab: {fileID: 4756932612375408658, guid: b47a03366fe70cb4bb5bd2da6ce04c26,

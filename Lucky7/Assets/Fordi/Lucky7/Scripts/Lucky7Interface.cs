@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Fordi.Core;
 using Fordi.UI;
+using Fordi.UI.MenuControl;
 
 namespace Fordi.Lucky7Engine
 {
@@ -11,7 +12,6 @@ namespace Fordi.Lucky7Engine
         [SerializeField]
         private Timer m_timer;
 
-        [SerializeField]
         private Lucky7 m_lucky7;
 
         public override void AwakeOverride()
@@ -30,6 +30,27 @@ namespace Fordi.Lucky7Engine
         public void DisplayPlayer()
         {
             m_player.Display();
+        }
+
+        public void DisplayBidders()
+        {
+            MenuItemInfo[] menuItems = new MenuItemInfo[m_lucky7.Bidders.Count];
+
+            for(int i = 0; i < m_lucky7.Bidders.Count; i++)
+            {
+                var item = m_lucky7.Bidders[i];
+
+                MenuItemInfo menuItem = new MenuItemInfo
+                {
+                    Action = new MenuItemEvent(),
+                    Icon = item.Avatar,
+                    Text = item.Name
+                };
+                menuItem.Action.AddListener((args) => item.Display());
+                menuItems[i] = menuItem;
+            }
+
+            m_globalUI.OpenGridMenu(menuItems, "BIDDERS", true);
         }
 
         public override void GameUpdate()
