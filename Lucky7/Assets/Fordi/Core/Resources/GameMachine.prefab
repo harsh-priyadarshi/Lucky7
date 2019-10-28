@@ -1632,6 +1632,7 @@ MonoBehaviour:
   _soundFxMixerGroup: {fileID: 0}
   _volumeOfSFXMixer: 
   _playlist:
+  - {fileID: 8300000, guid: 03873bfc2c79df348b410b436675d9f7, type: 3}
   - {fileID: 8300000, guid: c127f305c5c48044cb6720b3c61964c8, type: 3}
 --- !u!1 &8597164397131888638
 GameObject:

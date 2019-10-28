@@ -9,6 +9,7 @@ using System;
 using Random = UnityEngine.Random;
 using UnityEngine.UI;
 using Fordi.Common;
+using Papae.UnitySDK.Managers;
 
 namespace Fordi.Lucky7Engine
 {
@@ -26,6 +27,8 @@ namespace Fordi.Lucky7Engine
         private Button m_bidButton, m_bidSubtractButton, m_bidAddButton;
         [SerializeField]
         private MessageScreen m_lostScreen, m_victoryScreen;
+
+        private const string CheersAudio = "cheers";
       
 
         private Lucky7 m_lucky7;
@@ -162,6 +165,11 @@ namespace Fordi.Lucky7Engine
                     m_globalUI.RemoveOverlay();
                     Destroy(screen.gameObject);
                 });
+
+                if (Random.Range(0, 10) < 3)
+                    m_hostView.Express(Expression.BLINK);
+                else
+                    m_hostView.Express(Expression.SMILE);
             }
             else
             {
@@ -171,7 +179,15 @@ namespace Fordi.Lucky7Engine
                     m_globalUI.RemoveOverlay();
                     Destroy(screen.gameObject);
                 });
+
+                if (Random.Range(0, 10) < 3)
+                    m_hostView.Express(Expression.SHOCK);
+                else
+                    m_hostView.Express(Expression.CRY);
             }
+
+            if (won)
+                AudioManager.Instance.PlayOneShot(AudioManager.Instance.GetClipFromPlaylist(CheersAudio), Vector3.zero, .4f);
 
             m_globalUI.Overlay(screen.transform);
             m_hostView.CollectDice(done);
