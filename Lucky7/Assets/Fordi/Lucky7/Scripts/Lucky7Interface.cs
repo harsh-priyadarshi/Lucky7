@@ -207,7 +207,10 @@ namespace Fordi.Lucky7Engine
         public void DescreteSubtractBidAmount()
         {
             int bidAmount = Convert.ToInt32(m_bidAmount.text);
-            m_bidAmount.text = ((bidAmount / 100) * 100) + "";
+            if (bidAmount % 100 > 0)
+                m_bidAmount.text = ((bidAmount / 100) * 100) + "";
+            else if(bidAmount > 100)
+                m_bidAmount.text = (((bidAmount / 100) * 100) -100)  + "";
         }
 
         public void DescreteAddBidAmount()
