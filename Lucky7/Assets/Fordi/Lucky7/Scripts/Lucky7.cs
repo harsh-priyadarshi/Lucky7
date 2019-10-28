@@ -161,7 +161,7 @@ namespace Fordi.Lucky7Engine
         public void PlaceBid(Bid bid)
         {
             m_placedBid = bid;
-            Debug.LogError(m_placedBid.BidType.ToString() + " " + m_placedBid.Amount + " " + m_placedBid.BidNumber + " " + m_placedBid.BidSlot.ToString());
+            //Debug.LogError(m_placedBid.BidType.ToString() + " " + m_placedBid.Amount + " " + m_placedBid.BidNumber + " " + m_placedBid.BidSlot.ToString());
         }
 
         public void DiceRollFinish(int outcome)

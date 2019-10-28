@@ -58,7 +58,7 @@ namespace Fordi.Core
             var totalRounds = UnityRandom.Range(0, 40);
             var money = UnityRandom.Range(100, 40000);
             var bidAmount = UnityRandom.Range(100, money);
-            player.Init(UnityRandom.Range(0, 40000), m_globalUI.GetRandomAvatar(), totalRounds, UnityRandom.Range(0, totalRounds/2), bidAmount);
+            player.Init(money, m_globalUI.GetRandomAvatar(), totalRounds, UnityRandom.Range(0, totalRounds/2), bidAmount);
             return player;
         }
 
