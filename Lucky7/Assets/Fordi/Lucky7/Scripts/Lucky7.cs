@@ -39,6 +39,9 @@ namespace Fordi.Lucky7Engine
                  "Rule 2: For Slot 1 to 6 and 8 to 12, bid amount doubles on win.\n\n" +
                  "Rule 3: For slot 7, bid amount tripples on win.";
 
+        public const string RoundsCount = "RoundsCount";
+        public const string WinCount = "WonCount";
+
         private List<Player> m_bidders = new List<Player>();
 
         public List<Player> Bidders { get { return m_bidders; } }
@@ -52,6 +55,12 @@ namespace Fordi.Lucky7Engine
         private int m_maximumBid = 0;
 
         public int Time { get; protected set; }
+
+        protected override void AwakeOverride()
+        {
+            m_player.RoundsPlayed = PlayerPrefs.GetInt(RoundsCount, 0);
+            m_player.RoundsWon = PlayerPrefs.GetInt(WinCount, 0);
+        }
 
         private void StartSimulation(int time)
         {

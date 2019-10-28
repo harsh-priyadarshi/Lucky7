@@ -24,7 +24,7 @@ namespace Fordi.Lucky7Engine
         [SerializeField]
         private TMP_InputField m_bidAmount;
         [SerializeField]
-        private Button m_bidButton, m_bidSubtractButton, m_bidAddButton;
+        private Button m_bidButton;
         [SerializeField]
         private MessageScreen m_lostScreen, m_victoryScreen;
 
@@ -88,9 +88,6 @@ namespace Fordi.Lucky7Engine
                 case GameState.ROUND_BEGAN:
                     m_timer.StartTimer(m_lucky7.Time);
                     m_bidButton.interactable = true;
-                    m_bidAmount.interactable = true;
-                    m_bidSubtractButton.interactable = true;
-                    m_bidAddButton.interactable = true;
                     break;
                 case GameState.WAITING_FOR_RESULT:
                     if (m_bidsPanel.gameObject.activeSelf)
@@ -99,9 +96,6 @@ namespace Fordi.Lucky7Engine
                         m_bidsPanel.gameObject.SetActive(false);
                     }
                     m_bidButton.interactable = false;
-                    m_bidAmount.interactable = false;
-                    m_bidSubtractButton.interactable = false;
-                    m_bidAddButton.interactable = false;
                     m_hostView.RollDice((outcome) =>
                     {
                         m_lucky7.DiceRollFinish(outcome);
@@ -197,6 +191,9 @@ namespace Fordi.Lucky7Engine
             m_globalUI.Overlay(screen.transform);
             m_hostView.CollectDice(done);
             m_globalUI.UpdateCoins(won ? amount : - amount);
+
+            PlayerPrefs.SetInt(Lucky7.RoundsCount,  PlayerPrefs.GetInt(Lucky7.RoundsCount, 0) + 1);
+            PlayerPrefs.SetInt(Lucky7.WinCount,  PlayerPrefs.GetInt(Lucky7.WinCount, 0) + 1);
         }
 
         public void CollectDice(Action done)
