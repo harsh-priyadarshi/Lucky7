@@ -192,6 +192,9 @@ namespace Fordi.Lucky7Engine
             m_hostView.CollectDice(done);
             m_globalUI.UpdateCoins(won ? amount : - amount);
 
+            if (won)
+                m_player.RoundsWon += 1;
+            m_player.RoundsPlayed += 1;
             PlayerPrefs.SetInt(Lucky7.RoundsCount,  PlayerPrefs.GetInt(Lucky7.RoundsCount, 0) + 1);
             PlayerPrefs.SetInt(Lucky7.WinCount,  PlayerPrefs.GetInt(Lucky7.WinCount, 0) + 1);
         }

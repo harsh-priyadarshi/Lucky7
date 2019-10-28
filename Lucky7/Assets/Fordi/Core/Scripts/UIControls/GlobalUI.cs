@@ -28,7 +28,7 @@ namespace Fordi.UI
         void ClearTablePlayers();
         void LoadHeader();
         Sprite GetRandomAvatar();
-        void SwapPlayer(Player player);
+        void SwapPlayer(IPlayer player);
         void Overlay(Transform obj, bool block = true);
         void RemoveOverlay();
         void UpdateCoins(int amount);
@@ -178,7 +178,7 @@ namespace Fordi.UI
             m_tablePlayers.Clear();
         }
 
-        public void SwapPlayer(Player player)
+        public void SwapPlayer(IPlayer player)
         {
             if (m_tablePlayers.Count < 5)
             {
@@ -204,7 +204,7 @@ namespace Fordi.UI
             }
         }
 
-        void AddPlayer(Player player)
+        void AddPlayer(IPlayer player)
         {
             foreach (var item in m_playerAnchors)
             {

@@ -170,6 +170,7 @@ namespace Fordi.Lucky7Engine
         public void PlaceBid(Bid bid)
         {
             m_placedBid = bid;
+            m_globalUI.SwapPlayer(m_player);
             //Debug.LogError(m_placedBid.BidType.ToString() + " " + m_placedBid.Amount + " " + m_placedBid.BidNumber + " " + m_placedBid.BidSlot.ToString());
         }
 

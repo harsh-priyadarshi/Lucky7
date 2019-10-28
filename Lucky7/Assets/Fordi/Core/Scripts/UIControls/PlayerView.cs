@@ -9,16 +9,16 @@ namespace Fordi.UI
 {
     public class PlayerView : ButtonInteraction
     {
-        private Player m_player;
+        private IPlayer m_player;
 
-        public Player Player { get { return m_player; } }
+        public IPlayer Player { get { return m_player; } }
 
         public Tween Tween { get; set; } = null;
 
         [SerializeField]
         private Image m_preview;
 
-        public void DataBind(Player player)
+        public void DataBind(IPlayer player)
         {
             m_player = player;
             m_preview.sprite = player.Avatar;

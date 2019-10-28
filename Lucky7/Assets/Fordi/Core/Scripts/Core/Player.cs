@@ -20,6 +20,8 @@ namespace Fordi.Core
 
         int RoundsWon { get; set; }
 
+        int LastBid { get; set; }
+
         void Display();
 
         void Init(int money, Sprite avatar, int roundsPlayed, int roundsWon, int lastBid);
