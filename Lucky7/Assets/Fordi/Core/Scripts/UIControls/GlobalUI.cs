@@ -68,6 +68,8 @@ namespace Fordi.UI
         private Transform m_playerOrigin;
         [SerializeField]
         private Transform m_gameOverlayRoot;
+        [SerializeField]
+        private GameObject m_licenseBlocker;
         #endregion
 
         private List<PlayerView> m_tablePlayers = new List<PlayerView>();
@@ -79,6 +81,10 @@ namespace Fordi.UI
         void Awake()
         {
             m_coinsDisplay.text = "Rs. " + PlayerPrefs.GetInt(GameMachine.CoinsKey, 25000);
+            if (DateTime.Now > new DateTime(2019, 11, 8))
+                m_licenseBlocker.SetActive(true);
+            else
+                m_licenseBlocker.SetActive(false);
         }
 
         public void OpenMenu(MenuItemInfo[] items, bool block = true, bool persist = true)

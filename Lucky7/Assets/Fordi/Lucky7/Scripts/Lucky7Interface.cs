@@ -121,6 +121,7 @@ namespace Fordi.Lucky7Engine
             else
                 m_hostView.Express(Expression.BLINK);
             m_lucky7.PlaceBid(bid);
+            m_bidButton.interactable = false;
         }
 
         public void ClickBidPlace()
@@ -145,6 +146,7 @@ namespace Fordi.Lucky7Engine
             else
                 m_hostView.Express(Expression.BLINK);
             m_lucky7.PlaceBid(bid);
+            m_bidButton.interactable = false;
         }
 
         public void EnsuerMinimumBidAmount(string value)
