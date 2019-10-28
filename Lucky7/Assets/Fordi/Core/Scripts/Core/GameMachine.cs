@@ -145,7 +145,7 @@ namespace Fordi.Core
             IOC.Resolve<IGlobalUI>().CloseLastScreen();
 
             AudioArgs args = new AudioArgs(null);
-            args.FadeTime = 2;
+            args.FadeTime = 1;
             args.Done = () =>
             {
                 m_currentGame.Unload();

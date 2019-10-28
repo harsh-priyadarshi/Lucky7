@@ -2,14 +2,39 @@
 using Fordi.Core;
 using Fordi.UI;
 using Fordi.UI.MenuControl;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 namespace Fordi.Lucky7Engine
 {
+    public enum BidType
+    {
+        SINGLE,
+        SLOT
+    }
+
+    public enum BidSlot
+    {
+        CHHOTA_GHAR = 0,
+        LUCKY7 = 1,
+        BADA_GHAR = 2
+    }
+
+    public class Bid
+    {
+        public BidType BidType;
+        public int BidNumber;
+        public BidSlot BidSlot;
+        public int Amount;
+    }
+
     public class Lucky7 : Game
     {
+        public const int MinimumBidAmount = 100;
+
         public const string Lucky7Help = "Rule 1: Minimum bid amount is Rs. 100.\n\n" +
                  "Rule 2: For Slot 1 to 6 and 8 to 12, bid amount doubles on win.\n\n" +
                  "Rule 3: For slot 7, bid amount tripples on win.";
@@ -20,20 +45,26 @@ namespace Fordi.Lucky7Engine
 
         private Lucky7Interface m_interface;
 
+        private Bid m_placedBid = null;
+
         private IEnumerator m_round;
 
         private int m_maximumBid = 0;
 
         public int Time { get; protected set; }
 
-        private void StartSimulation()
+        private void StartSimulation(int time)
         {
+            m_bidders.Clear();
+            m_globalUI.ClearTablePlayers();
+            m_placedBid = null;
+
             m_state = GameState.ROUND_BEGAN;
 
             if (m_round != null)
                 StopCoroutine(m_round);
 
-            Time = Random.Range(5, 10);
+            Time = time;
 
             m_round = CoRound();
             StartCoroutine(m_round);
@@ -52,9 +83,18 @@ namespace Fordi.Lucky7Engine
                     CreateNewPlayer();
                 if (Random.Range(0, 10) == 0)
                     CreateNewPlayer();
+                Time--;
             }
+
+            StartDiceRoll();
         }
 
+        private void StartDiceRoll()
+        {
+            m_state = GameState.WAITING_FOR_RESULT;
+            Notify();
+        }
+       
         void CreateNewPlayer()
         {
             var player = Player.CreateRandomPlayer();
@@ -81,7 +121,7 @@ namespace Fordi.Lucky7Engine
 
             m_interface = FindObjectOfType<Lucky7Interface>();
 
-            StartSimulation();
+            StartSimulation(Random.Range(5, 11));
         }
 
         public override void ExecuteMenuCommand(MenuClickArgs args)
@@ -110,13 +150,48 @@ namespace Fordi.Lucky7Engine
             }
         }
 
-
         public override void ExecuteButtonCommand(UserInputArgs args)
         {
             if (args == null)
                 return;
 
             base.ExecuteButtonCommand(args);
+        }
+
+        public void PlaceBid(Bid bid)
+        {
+            m_placedBid = bid;
+            Debug.LogError(m_placedBid.BidType.ToString() + " " + m_placedBid.Amount + " " + m_placedBid.BidNumber + " " + m_placedBid.BidSlot.ToString());
+        }
+
+        public void DiceRollFinish(int outcome)
+        {
+            Action action = () => StartSimulation(10);
+
+            if (m_placedBid == null)
+            {
+                m_interface.CollectDice(action);
+                return;
+            }
+
+            if (m_placedBid.BidType == BidType.SINGLE)
+            {
+                if (outcome == m_placedBid.BidNumber)
+                    m_interface.ShowResult(true, m_placedBid.Amount * 10, action);
+                else
+                    m_interface.ShowResult(false, m_placedBid.Amount, action);
+            }
+            else
+            {
+                if (outcome < 7 && m_placedBid.BidSlot == BidSlot.CHHOTA_GHAR)
+                    m_interface.ShowResult(true, m_placedBid.Amount * 2, action);
+                else if (outcome == 7 && m_placedBid.BidSlot == BidSlot.LUCKY7)
+                    m_interface.ShowResult(true, m_placedBid.Amount * 3, action);
+                else if (outcome > 7 && m_placedBid.BidSlot == BidSlot.BADA_GHAR)
+                    m_interface.ShowResult(true, m_placedBid.Amount * 2, action);
+                else
+                    m_interface.ShowResult(false, m_placedBid.Amount, action);
+            }
         }
     }
 }

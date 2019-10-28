@@ -11,12 +11,12 @@ using UnityEngine.UI;
 namespace Fordi.UI
 {
     [DisallowMultipleComponent]
-    public class ButtonInteraction : Interaction
+    public class ToggleInteraction : Interaction
     {
         protected override void AwakeOverride()
         {
             base.AwakeOverride();
-            ((Button)m_selectable).onClick.AddListener(() =>
+            ((Toggle)m_selectable).onValueChanged.AddListener((val) =>
             {
                 var clip = AudioManager.Instance.GetClipFromPlaylist(ClickClip);
                 AudioManager.Instance.PlayOneShot(clip, Vector3.zero, .2f);

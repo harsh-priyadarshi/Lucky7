@@ -103,6 +103,8 @@ namespace Fordi.Core
 
         public GameObject Gameobject { get { return gameObject; } }
 
+        public GameState GameState { get { return m_state; } }
+
         protected void Awake()
         {
             m_gameMachine = IOC.Resolve<IGameMachine>();

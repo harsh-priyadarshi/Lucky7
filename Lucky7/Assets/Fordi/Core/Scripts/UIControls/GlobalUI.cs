@@ -25,9 +25,13 @@ namespace Fordi.UI
         void OpenGridMenu(MenuItemInfo[] menuItemInfos, string title, bool block = false, bool persist = true);
         void Popup(PopupInfo popupInfo);
         void CloseLastScreen();
+        void ClearTablePlayers();
         void LoadHeader();
         Sprite GetRandomAvatar();
         void SwapPlayer(Player player);
+        void Overlay(Transform obj, bool block = true);
+        void RemoveOverlay();
+        void UpdateCoins(int amount);
     }
 
     public interface IScreen
@@ -62,6 +66,8 @@ namespace Fordi.UI
         private PlayerView m_playerViewPrefab;
         [SerializeField]
         private Transform m_playerOrigin;
+        [SerializeField]
+        private Transform m_gameOverlayRoot;
         #endregion
 
         private List<PlayerView> m_tablePlayers = new List<PlayerView>();
@@ -154,9 +160,17 @@ namespace Fordi.UI
             return null;
         }
 
-        public void ClearPlayers()
+        public void ClearTablePlayers()
         {
-
+            foreach (var item in m_playerAnchors)
+            {
+                if (item.childCount > 0)
+                {
+                    Destroy(item.GetChild(0).gameObject);
+                    item.DetachChildren();
+                }
+            }
+            m_tablePlayers.Clear();
         }
 
         public void SwapPlayer(Player player)
@@ -204,6 +218,37 @@ namespace Fordi.UI
                     //playerView.transform.DOMove(position, 1.0f).OnComplete(() => playerView.transform.DOMove(m_playerOrigin.position, 1.0f));
                 }
             }
+        }
+
+        private Transform m_lastOverlay = null;
+        private Transform m_lastOverlayParent = null;
+
+        public void Overlay(Transform obj, bool block = true)
+        {
+            if (m_lastOverlay != null)
+            {
+                Debug.LogError("Can't overlay. Already one exists");
+            }
+
+            m_uiBlocker.SetActive(block);
+            m_lastOverlay = obj;
+            m_lastOverlayParent = m_lastOverlay.parent;
+            m_lastOverlay.SetParent(m_gameOverlayRoot);
+        }
+
+        public void RemoveOverlay()
+        {
+            m_uiBlocker.SetActive(false);
+            if (m_lastOverlay != null)
+                m_lastOverlay.SetParent(m_lastOverlayParent);
+            m_lastOverlayParent = null;
+            m_lastOverlay = null;
+        }
+
+        public void UpdateCoins(int amount)
+        {
+            int coin = Convert.ToInt32(m_coinsDisplay.text.Substring(4, m_coinsDisplay.text.Length-4));
+            m_coinsDisplay.text = "Rs. " + (coin + amount);
         }
     }
 }
