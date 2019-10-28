@@ -76,6 +76,11 @@ namespace Fordi.UI
 
         public bool IsOpen { get { return m_screenStack.Count != 0; } }
 
+        void Awake()
+        {
+            m_coinsDisplay.text = "Rs. " + PlayerPrefs.GetInt(GameMachine.CoinsKey, 25000);
+        }
+
         public void OpenMenu(MenuItemInfo[] items, bool block = true, bool persist = true)
         {
             if (m_screenStack.Count > 0)
@@ -249,6 +254,7 @@ namespace Fordi.UI
         {
             int coin = Convert.ToInt32(m_coinsDisplay.text.Substring(4, m_coinsDisplay.text.Length-4));
             m_coinsDisplay.text = "Rs. " + (coin + amount);
+            PlayerPrefs.SetInt(GameMachine.CoinsKey, coin + amount);
         }
     }
 }

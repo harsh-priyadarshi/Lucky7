@@ -43,6 +43,7 @@ namespace Fordi.Core
         private IMenuSelection m_menuSelection;
         private IAudio m_audio;
         private IPlayer m_player;
+        public const string CoinsKey = "Coins";
 
         private void Awake()
         {

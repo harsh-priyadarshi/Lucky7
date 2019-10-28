@@ -93,6 +93,11 @@ namespace Fordi.Lucky7Engine
                     m_bidAddButton.interactable = true;
                     break;
                 case GameState.WAITING_FOR_RESULT:
+                    if (m_bidsPanel.gameObject.activeSelf)
+                    {
+                        m_globalUI.RemoveOverlay();
+                        m_bidsPanel.gameObject.SetActive(false);
+                    }
                     m_bidButton.interactable = false;
                     m_bidAmount.interactable = false;
                     m_bidSubtractButton.interactable = false;
