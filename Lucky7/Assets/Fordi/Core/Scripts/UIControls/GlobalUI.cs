@@ -32,6 +32,7 @@ namespace Fordi.UI
         void Overlay(Transform obj, bool block = true);
         void RemoveOverlay();
         void UpdateCoins(int amount);
+        void Open(IScreen screen);
     }
 
     public interface IScreen
@@ -41,6 +42,7 @@ namespace Fordi.UI
         void Close();
         bool Blocked { get; }
         bool Persist { get; }
+        GameObject Gameobject { get;  }
     }
 
     public class GlobalUI : MonoBehaviour, IGlobalUI
@@ -261,6 +263,22 @@ namespace Fordi.UI
             int coin = Convert.ToInt32(m_coinsDisplay.text.Substring(4, m_coinsDisplay.text.Length-4));
             m_coinsDisplay.text = "Rs. " + (coin + amount);
             PlayerPrefs.SetInt(GameMachine.CoinsKey, coin + amount);
+        }
+
+        public void Open(IScreen screen)
+        {
+            if (m_screenStack.Count > 0)
+            {
+                var lstScreen = m_screenStack.Peek();
+                if (screen.Persist)
+                    screen.Deactivate();
+                else
+                    m_screenStack.Pop().Close();
+            }
+
+            m_uiBlocker.SetActive(screen.Blocked);
+            screen.Gameobject.transform.SetParent(m_screensRoot);
+            m_screenStack.Push(screen);
         }
     }
 }

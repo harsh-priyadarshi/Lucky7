@@ -33,6 +33,9 @@ namespace Fordi.UI
         private Action m_closed = null;
         private IGlobalUI m_globalUI;
 
+        public GameObject Gameobject { get { return gameObject; } }
+
+
         private void Awake()
         {
             m_globalUI = IOC.Resolve<IGlobalUI>();

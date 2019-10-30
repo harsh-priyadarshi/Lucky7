@@ -28,6 +28,8 @@ namespace Fordi.UI
 
         public bool Persist { get; private set; }
 
+        public GameObject Gameobject { get { return gameObject; } }
+
         void Awake()
         {
             m_globalUI = IOC.Resolve<IGlobalUI>();

@@ -126,9 +126,23 @@ namespace Fordi.Lucky7Engine
 
         public void ClickBidPlace()
         {
-            m_bidsPanel.gameObject.SetActive(true);
-            m_globalUI.Overlay(m_bidsPanel);
-            m_hostView.Express(Expression.QUESTION);
+            int bidAmount = Convert.ToInt32(m_bidAmount.text);
+            if (bidAmount > PlayerPrefs.GetInt(GameMachine.CoinsKey))
+            {
+                m_globalUI.Popup(new PopupInfo
+                {
+                    Content = "You don't have enough coins to place this bid",
+                    Title = "No Coins",
+                    Preview = null,
+                    Blocked = true
+                });
+            }
+            else
+            {
+                m_bidsPanel.gameObject.SetActive(true);
+                m_globalUI.Overlay(m_bidsPanel);
+                m_hostView.Express(Expression.QUESTION);
+            }
         }
 
         public void ClickBidSlot(int slot)
@@ -160,11 +174,14 @@ namespace Fordi.Lucky7Engine
             MessageScreen screen = null;
             if (won)
             {
+                m_globalUI.RemoveOverlay();
+
                 screen = Instantiate(m_victoryScreen);
-                screen.Init("Congratulations! You have won Rs. " + amount + ".", () =>
+                m_globalUI.Open(screen);
+
+                screen.Init("Congratulations! You have won Rs. " + amount + ".", false, true, () =>
                 {
-                    m_globalUI.RemoveOverlay();
-                    Destroy(screen.gameObject);
+                    m_globalUI.CloseLastScreen();
                 });
 
                 if (Random.Range(0, 10) < 3)
@@ -174,11 +191,14 @@ namespace Fordi.Lucky7Engine
             }
             else
             {
+                m_globalUI.RemoveOverlay();
+
                 screen = Instantiate(m_lostScreen);
-                screen.Init("You lost Rs. " + amount + ".\n Try next time.", () =>
+                m_globalUI.Open(screen);
+
+                screen.Init("You lost Rs. " + amount + ".\n Try next time.", false, true, () =>
                 {
-                    m_globalUI.RemoveOverlay();
-                    Destroy(screen.gameObject);
+                    m_globalUI.CloseLastScreen();
                 });
 
                 if (Random.Range(0, 10) < 3)
